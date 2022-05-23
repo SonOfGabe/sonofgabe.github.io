@@ -1,0 +1,89 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        html, 
+body {
+  margin: 0; padding: 0;
+  font: 16px sans-serif;
+}
+
+.node {
+  position: relative;
+  flex: 1 1 45%;
+  text-align: center; line-height: 2em;
+}
+.node:before {
+  content: '';
+  display: block;
+  width: 50.5%; height: calc(40px + 2em);
+  position: absolute; top: 0; left: 50%;
+  transform: translate(-50%, 20px);
+  border: 1px solid #000; border-bottom: none;
+  z-index: -1;
+  border-radius: 100% 100% 0 0;
+}
+.node.leaf:before { border: none; }
+body > .node { width: 100%; margin-top: 20px; }
+
+.node .container {
+  display: flex;
+  flex-wrap: nowrap; justify-content: center;
+  margin: 2em 0;
+}
+
+.node > span {
+  display: inline-block;
+  width: 2em; height: 2em;
+  background-color: #fff;
+  border: 1px solid #000; border-radius: 50%;
+}
+    </style>
+
+</head>
+<body>
+    
+    <script type="text/javascript">
+        const $d = document;
+
+function addNodeFromObj(obj, parentEl = $d.body) {
+  let el = $d.createElement('div');
+  el.classList.add('node');
+  if (!obj) {
+    el.classList.add('leaf');
+    parentEl.appendChild(el);
+    return;
+  }
+  el.insertAdjacentHTML('beforeend', `
+    <span class="name">${obj.name}</span><div class="container"></div>
+  `);
+  parentEl.appendChild(el);
+  if (obj.left || obj.right) {
+    el = el.querySelector('.container');
+    addNodeFromObj(obj.left, el);
+    addNodeFromObj(obj.right, el);
+  }
+  else
+    el.classList.add('leaf');
+}
+
+let tree = {
+  name: '1',
+  left: {
+    name: '2',
+    left : { name: '4' ,
+        left : {name: '3'}
+    },
+    right: { name: '5' }
+  },
+  right: {
+    name: '3',
+    left : { name: 'x' },
+    right: { name: 'y' }
+  }
+};
+addNodeFromObj(tree);
+    </script>
+</body>
+</html>
