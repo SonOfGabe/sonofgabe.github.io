@@ -2056,9 +2056,18 @@ function addclass3(){
 }
 
 function addclass4(){
-	// document.querySelector('#test231').classList.toogle("rotateclass")
+	window.console.log($('#test234').hasClass( "rotateclass" ))
+	if ($('#test234').hasClass( "rotateclass" )) {
+		$('#test234').removeClass("rotateclass")
+		// $('#infocode').style = "width: 0px;"
+		$('#infocode').css('width', '0');
 
-	// window.console.log(this)
-	// window.console.log("im here")
-	$('#test234').toggleClass("rotateclass")
+	}
+	else {
+		$('#test234').addClass("rotateclass")
+		// $('#infocode').style= "width: 420px";
+		$('#infocode').css('width', '420px');
+
+
+	}
 }

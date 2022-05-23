@@ -1562,9 +1562,18 @@ function addclass5(){
 }
 
 function addclass6(){
-	// document.querySelector('#test231').classList.toogle("rotateclass")
+	window.console.log($('#test236').hasClass( "rotateclass" ))
+	if ($('#test236').hasClass( "rotateclass" )) {
+		$('#test236').removeClass("rotateclass")
+		// $('#infocode').style = "width: 0px;"
+		$('#infocode').css('width', '0');
 
-	// window.console.log(this)
-	// window.console.log("im here")
-	$('#test236').toggleClass("rotateclass")
+	}
+	else {
+		$('#test236').addClass("rotateclass")
+		// $('#infocode').style= "width: 420px";
+		$('#infocode').css('width', '420px');
+
+
+	}
 }

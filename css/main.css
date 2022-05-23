@@ -1380,16 +1380,20 @@ p.infoSubSubSubHeader {
 
 
     .arrow1{
-        height: 17px;
+        height: 25px;
         transition: transform .2s ease-in-out;
         transition: 0.4s;
     
     }
 
+    .rotateclass {
+        transform: rotate(180deg);
+        transition: transform .2s ease-in-out;
+    }
 
     #inforamtionBlock {
         position: absolute;
-        right: -200px;
+        right: -150px;
         top: 450px;
     
     }
