@@ -1480,3 +1480,35 @@ p.infoSubSubSubHeader {
         color: #e9c2ab;
         font-size: 14px;
     }
+
+
+    .list6a {
+        padding:0;
+        list-style: none;
+        margin-bottom: 2.2em;
+        color: #e5e4d8;
+        text-align: justify;
+        font-size: 1.8rem;
+    line-height: 1.7em;
+    }
+    .list6a li{
+        padding:6px;
+    }
+    .list6a li:before {
+        padding-right:10px;
+        font-weight: bold;
+        color: #77AEDB;
+        content: "\2606";
+        transition-duration: 0.5s;
+    }
+    .list6a li:hover:before {
+        color: #337AB7;
+        content: "\2605";
+    }
+
+    .for_img {
+        margin-bottom: 2.2em;
+        color: #e5e4d8;
+        text-align: justify;
+        font-size: 1.2rem;
+    }
