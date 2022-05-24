@@ -856,7 +856,7 @@ BST.prototype.treeDelete = function(tree, valueToDelete)
 		else if (valueToDelete > tree.data)
 		{
 			this.cmd("SetText",  0, valueToDelete + " > " + tree.data + ".  Looking at right subtree");		
-			log.innerText += valueToDelete + " < " + tree.data + ". Идем в правое поддерево"	+ '\n'	+ '\n'
+			log.innerText += valueToDelete + " > " + tree.data + ". Идем в правое поддерево"	+ '\n'	+ '\n'
 		}
 		else
 		{
