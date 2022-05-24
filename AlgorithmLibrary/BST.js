@@ -116,7 +116,7 @@ BST.prototype.insertCallback = function(event)
 	{
 		// set text value
 		this.insertField.value = "";
-		this.implementAction(this.insertElement.bind(this), insertedValue);
+		this.implementAction(this.insertElement1.bind(this), insertedValue);
 	}
 }
 
@@ -143,6 +143,8 @@ BST.prototype.deleteTreeCallback = function(event)
 
 BST.prototype.printCallback = function(event)
 {
+	let log = document.getElementById('textblock')
+	log.innerText = ""
 	this.implementAction(this.printTree.bind(this),"");						
 }
 
@@ -196,6 +198,12 @@ BST.prototype.deleteTree = function(unused)
 
 BST.prototype.printTree = function(unused)
 {
+	let log = document.getElementById('textblock')
+	$('#infocode').css('width', '360px');
+	$('#test232').addClass("rotateclass")
+	window.console.log(log)
+
+
 	this.commands = [];
 	
 	if (this.treeRoot != null)
@@ -220,6 +228,7 @@ BST.prototype.printTree = function(unused)
 
 BST.prototype.printTreeRec = function(tree)
 {
+	let log = document.getElementById('textblock')
 	this.cmd("Step");
 	if (tree.left != null)
 	{
@@ -229,6 +238,9 @@ BST.prototype.printTreeRec = function(tree)
 		this.cmd("Step");
 	}
 	var nextLabelID = this.nextIndex++;
+	window.console.log(tree.data)
+	log.innerText += tree.data + "\n ";
+
 	this.cmd("CreateLabel", nextLabelID, tree.data, tree.x, tree.y);
 	this.cmd("SetForegroundColor", nextLabelID, BST.PRINT_COLOR);
 	this.cmd("Move", nextLabelID, this.xPosOfNextLabel, this.yPosOfNextLabel);
@@ -261,10 +273,13 @@ BST.prototype.findCallback = function(event)
 
 BST.prototype.findElement = function(findValue)
 {
+	let log = document.getElementById('textblock')
+	log.innerText = ""
 	this.commands = [];
 	
 	this.highlightID = this.nextIndex++;
-	
+	log.innerText += "Ищем "+findValue + '\n'+ '\n'
+
 	this.doFind(this.treeRoot, findValue);
 	
 	
@@ -274,195 +289,69 @@ BST.prototype.findElement = function(findValue)
 
 BST.prototype.doFind = function(tree, value)
 {
-	let statusblock = document.getElementById("status")
-	let infoblock = document.getElementById("infocode")
-	statusblock.innerText = "";
-	infoblock.innerHTML = "";
-
-	infoblock.innerHTML += "<p class='infoSubSubHeader ifFinded'>Если элемент найден</p>"
-	infoblock.innerHTML += "<p class='infoSubSubSubHeader fin'>&nbsp;&nbsp;Завершиить</p>"
-	infoblock.innerHTML += "<p class='infoHeader ifLeft'>Если искомоее значение < ключа</p>"
-	infoblock.innerHTML += "<p class='infoSubHeader goLeft1'>&nbsp;&nbsp;Идем в лево</p>"
-	infoblock.innerHTML += "<p class='infoHeader ifRight'>Если искомоее значение > ключа</p>"
-	infoblock.innerHTML += "<p class='infoSubHeader goRight'>&nbsp;&nbsp;Идем в право</p>"
-	infoblock.innerHTML += "<p class='infoHeader emptyKey'>Если ключей не осталось</p>"
-	infoblock.innerHTML += "<p class='infoSubHeader notFound'>&nbsp;&nbsp;Элемент не найден</p>"
-	statusblock.style = "visibility: visible"
-	document.getElementById("test232").classList.add("rotateclass")
-	document.getElementById("test231").classList.add("rotateclass")
-	infoblock.style = "visibility: visible"
-	let ifLeft = document.getElementsByClassName('ifLeft')[0]
-	let goLeft = document.getElementsByClassName('goLeft1')[0]
-	let ifFinded = document.getElementsByClassName('ifFinded')[0]
-	let fin = document.getElementsByClassName('fin')[0]
-	let ifRight = document.getElementsByClassName('ifRight')[0]
-	let goRight = document.getElementsByClassName('goRight')[0]
-	let emptyKey = document.getElementsByClassName('emptyKey')[0]
-	let notFound = document.getElementsByClassName('notFound')[0]
-
-	ifFinded.classList.add('selectedrow')
-	statusblock.innerText = "Ищем  " + value;
-	new Promise(function(resolve, reject) {
-		setTimeout(resolve, 1500);
-		window.console.log('tyt1')
-	  }).then(async()=>{
-		if (tree != null)
-		{
-			await this.cmd("SetHighlight", tree.graphicID, 1);
-			this.AnimationSteps = this.commands
-    		this.animationManager.StartNewAnimation(this.commands)
-			window.console.log(this.cmd)
-
-			// this.animationManager.animatedObjects.setHighlight( parseInt(tree.graphicID), 1);
-			if (tree.data == value)
-			{
-				fin.classList.add('selectedrow')
-				ifFinded.classList.remove('selectedrow')
-				await this.cmd("Step");			
-				this.AnimationSteps = await this.commands
-    			await this.animationManager.StartNewAnimation(this.commands)	
+	let log = document.getElementById('textblock')
+	$('#infocode').css('width', '360px');
+	$('#test232').addClass("rotateclass")
+	window.console.log(log)
 	
-				await this.cmd("SetHighlight", tree.graphicID, 0);
-				this.AnimationSteps = await this.commands
-    			await this.animationManager.StartNewAnimation(this.commands)
-				await this.clearCmd()
-
-				window.console.log(this.cmd)
-
-				// this.animationManager.animatedObjects.setHighlight( parseInt(tree.graphicID), 0);
-
-			}
-			else
-			{
-				if (tree.data > value)
-				{
-					
-					new Promise(function(resolve, reject) {
-						ifLeft.classList.add('selectedrow')
-						ifFinded.classList.remove('selectedrow')
-						setTimeout(resolve, 1500);
-					  }).then(async()=>{		
-						window.console.log('tyt1222222222')
-						window.console.log(goLeft)
-						  goLeft.classList.add('selectedrow')
-						  ifLeft.classList.remove('selectedrow')
-						await this.cmd("Step");
-						this.AnimationSteps = await this.commands
-    					await this.animationManager.StartNewAnimation(this.commands)
-
-						await this.cmd("SetHighlight", tree.graphicID, 0);
-						this.AnimationSteps = await this.commands
-    					await this.animationManager.StartNewAnimation(this.commands)
-
-						if (tree.left!= null)
-						{
-							await this.cmd("CreateHighlightCircle", this.highlightID, BST.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
-							this.AnimationSteps = await this.commands
-    					await this.animationManager.StartNewAnimation(this.commands)
-
-
-							await this.cmd("Move", this.highlightID, tree.left.x, tree.left.y);
-							this.AnimationSteps = await this.commands
-    					await this.animationManager.StartNewAnimation(this.commands)
-
-
-							await this.cmd("Step");
-							this.AnimationSteps = await this.commands
-    					await this.animationManager.StartNewAnimation(this.commands)
-
-							// await this.animationManager.step;
-
-							await this.cmd("Delete", this.highlightID);
-							this.AnimationSteps = this.commands
-    this.animationManager.StartNewAnimation(this.commands)
-
-
-							// await this.animationManager.animatedObjects.deleteIncident(parseInt(this.highlightID));
-
-						}
-					  }).then(async()=>{
-						new Promise(function(resolve, reject) {
-							setTimeout(resolve, 1500);
-						}).then(async()=>{
-							await this.clearCmd()
-
-							await this.doFind(tree.left, value);
-						})
-					  })
-
-					
-				}
-				else
-				{
-					new Promise(function(resolve, reject) {
-						ifRight.classList.add('selectedrow')
-						ifFinded.classList.remove('selectedrow')
-						setTimeout(resolve, 1500);
-					  }).then(async()=>{
-						goRight.classList.add('selectedrow')
-						ifRight.classList.remove('selectedrow')
-						await this.cmd("Step");
-						this.AnimationSteps = await this.commands
-    			await this.animationManager.StartNewAnimation(this.commands)
-
-						await this.cmd("SetHighlight", tree.graphicID, 0);
-						this.AnimationSteps = await this.commands
-    			await this.animationManager.StartNewAnimation(this.commands)
-
-						if (tree.right!= null)
-						{
-							await this.cmd("CreateHighlightCircle", this.highlightID, BST.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
-							this.AnimationSteps = await this.commands
-    			await this.animationManager.StartNewAnimation(this.commands)
-
-							await this.cmd("Move", this.highlightID, tree.right.x, tree.right.y);
-							this.AnimationSteps = await this.commands
-    			await this.animationManager.StartNewAnimation(this.commands)
-
-							await this.cmd("Step");
-							this.AnimationSteps = await this.commands
-    			await this.animationManager.StartNewAnimation(this.commands)
-
-							await this.cmd("Delete", this.highlightID);		
-							this.AnimationSteps = await this.commands
-    			await this.animationManager.StartNewAnimation(this.commands)
-		
-						}
-					  }).then(async()=>{
-						new Promise(function(resolve, reject) {
-							setTimeout(resolve, 1500);
-						}).then(async()=>{
-							await this.clearCmd()
-
-							await this.doFind(tree.right, value);	
-						})
-					  })
-		
-				}
-				
-			}
-			
+	this.cmd("SetText", 0, "Searching for "+value);
+	if (tree != null)
+	{
+		this.cmd("SetHighlight", tree.graphicID, 1);
+		if (tree.data == value)
+		{
+			this.cmd("SetText", 0, "Searching for "+value+" : " + value + " = " + value + " (Element found!)");
+			log.innerText += "Искомое значение "+value + " == " + tree.data + '\n' + "Элемент найден\n"
+			this.cmd("Step");					
+			this.cmd("SetText", 0, "Found:"+value);
+			this.cmd("SetHighlight", tree.graphicID, 0);
 		}
 		else
 		{
+			if (tree.data > value)
+			{
+				this.cmd("SetText", 0, "Searching for "+value+" : " + value + " < " + tree.data + " (look to left subtree)");
+				log.innerText +=  value + " < " + tree.data + '\n' + "Идем в лево\n\n"
+
+				this.cmd("Step");
+				this.cmd("SetHighlight", tree.graphicID, 0);
+				if (tree.left!= null)
+				{
+					this.cmd("CreateHighlightCircle", this.highlightID, BST.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
+					this.cmd("Move", this.highlightID, tree.left.x, tree.left.y);
+					this.cmd("Step");
+					this.cmd("Delete", this.highlightID);
+				}
+				this.doFind(tree.left, value);
+			}
+			else
+			{
+				this.cmd("SetText", 0, "Searching for "+value+" : " + value + " > " + tree.data + " (look to right subtree)");	
+				log.innerText +=  value + " < " + tree.data + '\n' + "Идем в право\n\n"
+
+				this.cmd("Step");
+				this.cmd("SetHighlight", tree.graphicID, 0);
+				if (tree.right!= null)
+				{
+					this.cmd("CreateHighlightCircle", this.highlightID, BST.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
+					this.cmd("Move", this.highlightID, tree.right.x, tree.right.y);
+					this.cmd("Step");
+					this.cmd("Delete", this.highlightID);				
+				}
+				this.doFind(tree.right, value);						
+			}
 			
-			new Promise(function(resolve, reject) {
-				setTimeout(resolve, 1500);
-				emptyKey.classList.add('selectedrow')
-				ifFinded.classList.remove('selectedrow')
-			  }).then(async()=>{
-				notFound.classList.add('selectedrow')
-				emptyKey.classList.remove('selectedrow')
-
-				await this.cmd("Step");		
-				this.AnimationSteps = await this.commands
-    			await this.animationManager.StartNewAnimation(this.commands)	
-				await this.clearCmd()
-		
-
-			  })
 		}
-	  })
+		
+	}
+	else
+	{
+		log.innerText +=  "Элемент не найден\n"
+
+		this.cmd("SetText", 0, "Searching for "+value+" : " + "< Empty Tree > (Element not found)");				
+		this.cmd("Step");					
+		this.cmd("SetText", 0, "Searching for "+value+" : " + " (Element not found)");					
+	}
 }
 
 
@@ -816,12 +705,19 @@ BST.prototype.insert = async function(elem, tree)
 //******************************************************************************************* */
 BST.prototype.insertElement1 = function(insertedValue)
 {
+	let log = document.getElementById('textblock')
+	$('#infocode').css('width', '360px');
+	$('#test232').addClass("rotateclass")
+
+
 	this.commands = new Array();	
 	this.cmd("SetText", 0, "Inserting "+insertedValue);
+	log.innerText += "Вставляем " + insertedValue+'\n';
 	this.highlightID = this.nextIndex++;
 	
 	if (this.treeRoot == null)
 	{
+		log.innerText += "Корень пустой. Задаём корень = " + insertedValue +'\n'+'\n';
 		this.cmd("CreateCircle", this.nextIndex, insertedValue,  this.startingX, BST.STARTING_Y);
 		this.cmd("SetForegroundColor", this.nextIndex, BST.FOREGROUND_COLOR);
 		this.cmd("SetBackgroundColor", this.nextIndex, BST.BACKGROUND_COLOR);
@@ -850,6 +746,8 @@ BST.prototype.insertElement1 = function(insertedValue)
 
 BST.prototype.insert1 = function(elem, tree)
 {
+	let log = document.getElementById('textblock')
+
 	this.cmd("SetHighlight", tree.graphicID , 1);
 	this.cmd("SetHighlight", elem.graphicID , 1);
 	
@@ -857,11 +755,13 @@ BST.prototype.insert1 = function(elem, tree)
 	{
 		this.cmd("SetText", 0,  elem.data + " < " + tree.data + ".  Looking at left subtree");	
 		console.log(elem.data + " < " + tree.data + ".  Looking at left subtree" + " идём в левую ветку")
+		log.innerText += elem.data + " < " + tree.data + ".  Идём в левую ветку"+'\n'
 	}
 	else
 	{
 		this.cmd("SetText",  0, elem.data + " >= " + tree.data + ".  Looking at right subtree");		
 		console.log(elem.data + " >= " + tree.data + ".  Looking at right subtree" + " идём в правую ветку")
+		log.innerText += elem.data + " >= " + tree.data + ".  Идём в правую ветку"+'\n'
 	}
 	this.cmd("Step");
 	this.cmd("SetHighlight", tree.graphicID, 0);
@@ -871,7 +771,8 @@ BST.prototype.insert1 = function(elem, tree)
 	{
 		if (tree.left == null)
 		{
-			this.cmd("SetText", 0,"Found null tree, inserting element");				
+			this.cmd("SetText", 0,"Found null tree, inserting element");	
+			log.innerText += "Найден пустой лист. Вставляем элемент"	+'\n'	+'\n'	
 			
 			this.cmd("SetHighlight", elem.graphicID, 0);
 			tree.left=elem;
@@ -891,7 +792,9 @@ BST.prototype.insert1 = function(elem, tree)
 	{
 		if (tree.right == null)
 		{
-			this.cmd("SetText",  0, "Found null tree, inserting element");				
+			this.cmd("SetText",  0, "Found null tree, inserting element");		
+			log.innerText += "Найден пустой лист. Вставляем элемент"	+'\n'+'\n'		
+		
 			this.cmd("SetHighlight", elem.graphicID, 0);
 			tree.right=elem;
 			elem.parent = tree;
@@ -916,30 +819,14 @@ BST.prototype.insert1 = function(elem, tree)
 
 BST.prototype.deleteElement = function(deletedValue)
 {
-	let statusblock = document.getElementById("status")
-	let infoblock = document.getElementById("infocode")
-	statusblock.innerText = "";
-	infoblock.innerHTML = "";
-	infoblock.innerHTML += "<p class='infoHeader findedKey'>Если найден ключ</p>"
-	infoblock.innerHTML += "<p class='infoHeader ifChildElem'>&nbsp;&nbsp;Если есть дочерние элементы</p>"
-	infoblock.innerHTML += "<p class='infoHeader delChildELem'>&nbsp;&nbsp;&nbsp;&nbsp;Убираем ключ из дерева</p>"
-	infoblock.innerHTML += "<p class='infoHeader delElem'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Удаляем ключ</p>"
-	infoblock.innerHTML += "<p class='infoHeader delElem1'>&nbsp;&nbsp;Иначе удаляем ключ</p>"
-
-	infoblock.innerHTML += "<p class='infoHeader ifLeft'>Если удаляемое значение < ключа</p>"
-	infoblock.innerHTML += "<p class='infoSubHeader goLeft'>&nbsp;&nbsp;Идем в лево</p>"
-	infoblock.innerHTML += "<p class='infoHeader ifRight'>Если удаляемое значение > ключа</p>"
-	infoblock.innerHTML += "<p class='infoSubHeader goRight'>&nbsp;&nbsp;Идем в право</p>"
-	infoblock.innerHTML += "<p class='infoSubHeader ifEmptyKey'>Если ключей не осталось</p>"
-	infoblock.innerHTML += "<p class='infoSubHeader notFound'>&nbsp;&nbsp;Элемент не найден</p>"
-
-
-
-	statusblock.style = "visibility: visible"
-	infoblock.style = "visibility: visible"
+	let log = document.getElementById('textblock')
+	$('#infocode').css('width', '360px');
+	$('#test232').addClass("rotateclass")
+	window.console.log(log)
+	log.innerText = "";
 	this.commands = [];
-	statusblock.innerText = "Удаляем  " + deletedValue;
 	this.cmd("SetText", 0, "Deleting "+deletedValue);
+	log.innerText += "Удаляем: "+deletedValue + '\n'+ '\n'
 	this.cmd("Step");
 	this.cmd("SetText", 0, "");
 	this.highlightID = this.nextIndex++;
@@ -951,300 +838,214 @@ BST.prototype.deleteElement = function(deletedValue)
 
 BST.prototype.treeDelete = function(tree, valueToDelete)
 {
-	let findedKey = document.getElementsByClassName('findedKey')[0]
-	let ifChildElem = document.getElementsByClassName('ifChildElem')[0]
-	let delChildELem = document.getElementsByClassName('delChildELem')[0]
-	let delElem = document.getElementsByClassName('delElem')[0]
-	let delElem1 = document.getElementsByClassName('delElem1')[0]
-	let ifLeft = document.getElementsByClassName('ifLeft')[0]
-	let goLeft = document.getElementsByClassName('goLeft')[0]
-	let ifRight = document.getElementsByClassName('ifRight')[0]
-	let goRight = document.getElementsByClassName('goRight')[0]
-	let ifEmptyKey = document.getElementsByClassName('ifEmptyKey')[0]
-	let notFound = document.getElementsByClassName('notFound')[0]
-	findedKey.classList.remove('selectedrow')
-	ifChildElem.classList.remove('selectedrow')
-	delChildELem.classList.remove('selectedrow')
-	delElem.classList.remove('selectedrow')
-	delElem1.classList.remove('selectedrow')
-	ifLeft.classList.remove('selectedrow')
-	goLeft.classList.remove('selectedrow')
-	ifRight.classList.remove('selectedrow')
-	goRight.classList.remove('selectedrow')
-	ifEmptyKey.classList.remove('selectedrow')
-	notFound.classList.remove('selectedrow')
-	return new Promise(function(resolve, reject) {
-		setTimeout(resolve, 1500);
-		findedKey.classList.add('selectedrow')
-		window.console.log('tyt1')
-	  }).then(()=>{
-		var leftchild = false;
-		if (tree != null)
+	let log = document.getElementById('textblock')
+
+	var leftchild = false;
+	if (tree != null)
+	{
+		if (tree.parent != null)
 		{
-			if (tree.parent != null)
-			{
-				leftchild = tree.parent.left == tree;
-			}
-			this.cmd("SetHighlight", tree.graphicID, 1);
-			this.AnimationSteps = this.commands
-      		this.animationManager.StartNewAnimation(this.commands)
-			if (valueToDelete < tree.data)
-			{	
-				this.cmd("SetText", 0, valueToDelete + " < " + tree.data + ".  Looking at left subtree");				
-			}
-			else if (valueToDelete > tree.data)
-			{
-				this.cmd("SetText",  0, valueToDelete + " > " + tree.data + ".  Looking at right subtree");				
-			}
-			else
-			{
-				this.cmd("SetText",  0, valueToDelete + " == " + tree.data + ".  Found node to delete");									
-			}
-			this.cmd("Step");
-			this.AnimationSteps = this.commands
-      		this.animationManager.StartNewAnimation(this.commands)
-
-			this.cmd("SetHighlight",  tree.graphicID, 0);
-			this.AnimationSteps = this.commands
-      		this.animationManager.StartNewAnimation(this.commands)
-			
-			if (valueToDelete == tree.data)
-			{
-				if (tree.left == null && tree.right == null)
-				{
-					this.cmd("SetText", 0, "Node to delete is a leaf.  Delete it.");									
-					this.cmd("Delete", tree.graphicID);
-					if (leftchild && tree.parent != null)
-					{
-						tree.parent.left = null;
-					}
-					else if (tree.parent != null)
-					{
-						tree.parent.right = null;
-					}
-					else
-					{
-						treeRoot = null;
-					}
-					this.resizeTree();				
-					this.cmd("Step");
-					
-				}
-				else if (tree.left == null)
-				{
-					this.cmd("SetText", 0, "Node to delete has no left child.  \nSet parent of deleted node to right child of deleted node.");									
-					if (tree.parent != null)
-					{
-						this.cmd("Disconnect",  tree.parent.graphicID, tree.graphicID);
-						this.cmd("Connect",  tree.parent.graphicID, tree.right.graphicID, BST.LINK_COLOR);
-						this.cmd("Step");
-						this.cmd("Delete", tree.graphicID);
-						if (leftchild)
-						{
-							tree.parent.left = tree.right;
-						}
-						else
-						{
-							tree.parent.right = tree.right;
-						}
-						tree.right.parent = tree.parent;
-					}
-					else
-					{
-						this.cmd("Delete", tree.graphicID);
-						this.treeRoot = tree.right;
-						this.treeRoot.parent = null;
-					}
-					this.resizeTree();				
-				}
-				else if (tree.right == null)
-				{
-					this.cmd("SetText", 0, "Node to delete has no right child.  \nSet parent of deleted node to left child of deleted node.");									
-					if (tree.parent != null)
-					{
-						this.cmd("Disconnect", tree.parent.graphicID, tree.graphicID);
-						this.cmd("Connect", tree.parent.graphicID, tree.left.graphicID, BST.LINK_COLOR);
-						this.cmd("Step");
-						this.cmd("Delete", tree.graphicID);
-						if (leftchild)
-						{
-							tree.parent.left = tree.left;								
-						}
-						else
-						{
-							tree.parent.right = tree.left;
-						}
-						tree.left.parent = tree.parent;
-					}
-					else
-					{
-						this.cmd("Delete",  tree.graphicID);
-						this.treeRoot = tree.left;
-						this.treeRoot.parent = null;
-					}
-					this.resizeTree();
-				}
-				else // tree.left != null && tree.right != null
-				{
-					this.cmd("SetText", 0, "Node to delete has two childern.  \nFind largest node in left subtree.");									
-					
-					this.highlightID = this.nextIndex;
-					this.nextIndex += 1;
-					this.cmd("CreateHighlightCircle", this.highlightID, BST.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
-					var tmp = tree;
-					tmp = tree.left;
-					this.cmd("Move", this.highlightID, tmp.x, tmp.y);
-					this.cmd("Step");																									
-					while (tmp.right != null)
-					{
-						tmp = tmp.right;
-						this.cmd("Move", this.highlightID, tmp.x, tmp.y);
-						this.cmd("Step");																									
-					}
-					this.cmd("SetText", tree.graphicID, " ");
-					var labelID = this.nextIndex;
-					this.nextIndex += 1;
-					this.cmd("CreateLabel", labelID, tmp.data, tmp.x, tmp.y);
-					tree.data = tmp.data;
-					this.cmd("Move", labelID, tree.x, tree.y);
-					this.cmd("SetText", 0, "Copy largest value of left subtree into node to delete.");									
-					
-					this.cmd("Step");
-					this.cmd("SetHighlight", tree.graphicID, 0);
-					this.cmd("Delete", labelID);
-					this.cmd("SetText", tree.graphicID, tree.data);
-					this.cmd("Delete", this.highlightID);							
-					this.cmd("SetText", 0,"Remove node whose value we copied.");									
-					
-					if (tmp.left == null)
-					{
-						if (tmp.parent != tree)
-						{
-							tmp.parent.right = null;
-						}
-						else
-						{
-							tree.left = null;
-						}
-						this.cmd("Delete", tmp.graphicID);
-						this.resizeTree();
-					}
-					else
-					{
-						this.cmd("Disconnect", tmp.parent.graphicID,  tmp.graphicID);
-						this.cmd("Connect", tmp.parent.graphicID, tmp.left.graphicID, BST.LINK_COLOR);
-						this.cmd("Step");
-						this.cmd("Delete", tmp.graphicID);
-						if (tmp.parent != tree)
-						{
-							tmp.parent.right = tmp.left;
-							tmp.left.parent = tmp.parent;
-						}
-						else
-						{
-							tree.left = tmp.left;
-							tmp.left.parent = tree;
-						}
-						this.resizeTree();
-					}
-					
-				}
-			}
-			else if (valueToDelete < tree.data)
-			{
-				
-				new Promise(function(resolve, reject) {
-					setTimeout(resolve, 1500);
-					ifLeft.classList.add('selectedrow')
-					findedKey.classList.remove('selectedrow')					
-					window.console.log('tyt1')
-				  }).then(()=>{
-					if (tree.left != null)
-					{
-						this.cmd("CreateHighlightCircle", this.highlightID, BST.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
-						this.AnimationSteps = this.commands
-						this.animationManager.StartNewAnimation(this.commands)
-
-						this.cmd("Move", this.highlightID, tree.left.x, tree.left.y);
-						this.AnimationSteps = this.commands
-						this.animationManager.StartNewAnimation(this.commands)
-
-						this.cmd("Step");
-						this.AnimationSteps = this.commands
-						this.animationManager.StartNewAnimation(this.commands)
-
-						this.cmd("Delete", this.highlightID);
-						this.AnimationSteps = this.commands
-						this.animationManager.StartNewAnimation(this.commands)
-					}
-					new Promise(function(resolve, reject) {
-						setTimeout(resolve, 1500);
-						ifLeft.classList.remove('selectedrow')
-						goLeft.classList.add('selectedrow')						
-						window.console.log('tyt1')
-					  }).then(()=>{
-						this.clearCmd()
-						this.treeDelete(tree.left, valueToDelete);
-					  })
-				  })
-				
-			}
-			else
-			{
-				
-				new Promise(function(resolve, reject) {
-					setTimeout(resolve, 1500);
-					ifRight.classList.add('selectedrow')
-					findedKey.classList.remove('selectedrow')					
-					window.console.log('tyt1')
-				  }).then(()=>{
-					if (tree.right != null)
-					{
-						this.cmd("CreateHighlightCircle", this.highlightID, BST.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
-						this.AnimationSteps = this.commands
-						this.animationManager.StartNewAnimation(this.commands)
-
-						this.cmd("Move", this.highlightID, tree.right.x, tree.right.y);
-						this.AnimationSteps = this.commands
-						this.animationManager.StartNewAnimation(this.commands)
-
-						this.cmd("Step");
-						this.AnimationSteps = this.commands
-						this.animationManager.StartNewAnimation(this.commands)
-
-						this.cmd("Delete", this.highlightID);
-						this.AnimationSteps = this.commands
-						this.animationManager.StartNewAnimation(this.commands)
-					}
-					new Promise(function(resolve, reject) {
-						setTimeout(resolve, 1500);
-						ifRight.classList.remove('selectedrow')
-						goRight.classList.add('selectedrow')							
-						window.console.log('tyt1')
-					  }).then(()=>{
-						this.clearCmd()
-						this.treeDelete(tree.right, valueToDelete);
-					  })
-				  })
-				
-			}
+			leftchild = tree.parent.left == tree;
+		}
+		this.cmd("SetHighlight", tree.graphicID, 1);
+		if (valueToDelete < tree.data)
+		{	
+			this.cmd("SetText", 0, valueToDelete + " < " + tree.data + ".  Looking at left subtree");		
+			log.innerText += valueToDelete + " < " + tree.data + ". Идем в левое поддерево"+ '\n'+ '\n'
+		}
+		else if (valueToDelete > tree.data)
+		{
+			this.cmd("SetText",  0, valueToDelete + " > " + tree.data + ".  Looking at right subtree");		
+			log.innerText += valueToDelete + " < " + tree.data + ". Идем в правое поддерево"	+ '\n'	+ '\n'
 		}
 		else
 		{
-			
-			new Promise(function(resolve, reject) {
-				setTimeout(resolve, 1500);
-				ifEmptyKey.classList.add('selectedrow')
-				findedKey.classList.remove('selectedrow')				
-				window.console.log('tyt1')
-			  }).then(()=>{
-				ifEmptyKey.classList.remove('selectedrow')
-				notFound.classList.add('selectedrow')
-			  })
-			this.cmd("SetText", 0, "Elemet "+valueToDelete+" not found, could not delete");
+			this.cmd("SetText",  0, valueToDelete + " == " + tree.data + ".  Found node to delete");		
+			log.innerText += valueToDelete + " == " + tree.data + ".\n Найден элемент для удаления"	+ '\n'	+ '\n'					
 		}
+		this.cmd("Step");
+		this.cmd("SetHighlight",  tree.graphicID, 0);
 		
-	  })
+		if (valueToDelete == tree.data)
+		{
+			if (tree.left == null && tree.right == null)
+			{
+				this.cmd("SetText", 0, "Node to delete is a leaf.  Delete it.");	
+				log.innerText += "Узел для удаления лист. Удаляем его."	+ '\n'+ '\n'
+				this.cmd("Delete", tree.graphicID);
+				if (leftchild && tree.parent != null)
+				{
+					tree.parent.left = null;
+				}
+				else if (tree.parent != null)
+				{
+					tree.parent.right = null;
+				}
+				else
+				{
+					treeRoot = null;
+				}
+				this.resizeTree();				
+				this.cmd("Step");
+				
+			}
+			else if (tree.left == null)
+			{
+				this.cmd("SetText", 0, "Node to delete has no left child.  \nSet parent of deleted node to right child of deleted node.");	
+				log.innerText += "Узел для удаления не имеет левого дочернего элемента.\n Установим родительский элемент удаленного узла на правый дочерний элемент удаленного узла."	+ '\n'+ '\n'								
+				if (tree.parent != null)
+				{
+					this.cmd("Disconnect",  tree.parent.graphicID, tree.graphicID);
+					this.cmd("Connect",  tree.parent.graphicID, tree.right.graphicID, BST.LINK_COLOR);
+					this.cmd("Step");
+					this.cmd("Delete", tree.graphicID);
+					if (leftchild)
+					{
+						tree.parent.left = tree.right;
+					}
+					else
+					{
+						tree.parent.right = tree.right;
+					}
+					tree.right.parent = tree.parent;
+				}
+				else
+				{
+					this.cmd("Delete", tree.graphicID);
+					this.treeRoot = tree.right;
+					this.treeRoot.parent = null;
+				}
+				this.resizeTree();				
+			}
+			else if (tree.right == null)
+			{
+				this.cmd("SetText", 0, "Node to delete has no right child.  \nSet parent of deleted node to left child of deleted node.");	
+				log.innerText += "Узел для удаления не имеет правого дочернего элемента.\n'\n' Установим родительский элемент удаленного узла на левый дочерний элемент удаленного узла."	+ '\n'+ '\n'								
+								
+				if (tree.parent != null)
+				{
+					this.cmd("Disconnect", tree.parent.graphicID, tree.graphicID);
+					this.cmd("Connect", tree.parent.graphicID, tree.left.graphicID, BST.LINK_COLOR);
+					this.cmd("Step");
+					this.cmd("Delete", tree.graphicID);
+					if (leftchild)
+					{
+						tree.parent.left = tree.left;								
+					}
+					else
+					{
+						tree.parent.right = tree.left;
+					}
+					tree.left.parent = tree.parent;
+				}
+				else
+				{
+					this.cmd("Delete",  tree.graphicID);
+					this.treeRoot = tree.left;
+					this.treeRoot.parent = null;
+				}
+				this.resizeTree();
+			}
+			else // tree.left != null && tree.right != null
+			{
+				this.cmd("SetText", 0, "Node to delete has two childern.  \nFind largest node in left subtree.");	
+				log.innerText += "Узел для удаления имеет два дочерних элемента.\n\n Ищем наибольший узел в левом поддереве."	+ '\n'	+ '\n'								
+								
+				
+				this.highlightID = this.nextIndex;
+				this.nextIndex += 1;
+				this.cmd("CreateHighlightCircle", this.highlightID, BST.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
+				var tmp = tree;
+				tmp = tree.left;
+				this.cmd("Move", this.highlightID, tmp.x, tmp.y);
+				this.cmd("Step");																									
+				while (tmp.right != null)
+				{
+					tmp = tmp.right;
+					this.cmd("Move", this.highlightID, tmp.x, tmp.y);
+					this.cmd("Step");																									
+				}
+				this.cmd("SetText", tree.graphicID, " ");
+				var labelID = this.nextIndex;
+				this.nextIndex += 1;
+				this.cmd("CreateLabel", labelID, tmp.data, tmp.x, tmp.y);
+				tree.data = tmp.data;
+				this.cmd("Move", labelID, tree.x, tree.y);
+				this.cmd("SetText", 0, "Copy largest value of left subtree into node to delete.");			
+				log.innerText += "Копируем наибольшее значение с левого поддерева в узел для удаления."	+ '\n'	+ '\n'								
+						
+				
+				this.cmd("Step");
+				this.cmd("SetHighlight", tree.graphicID, 0);
+				this.cmd("Delete", labelID);
+				this.cmd("SetText", tree.graphicID, tree.data);
+				this.cmd("Delete", this.highlightID);							
+				this.cmd("SetText", 0,"Remove node whose value we copied.");	
+				log.innerText += "Удалить узел, значение которого мы скопировали"	+ '\n'	+ '\n'								
+				
+				if (tmp.left == null)
+				{
+					if (tmp.parent != tree)
+					{
+						tmp.parent.right = null;
+					}
+					else
+					{
+						tree.left = null;
+					}
+					this.cmd("Delete", tmp.graphicID);
+					this.resizeTree();
+				}
+				else
+				{
+					this.cmd("Disconnect", tmp.parent.graphicID,  tmp.graphicID);
+					this.cmd("Connect", tmp.parent.graphicID, tmp.left.graphicID, BST.LINK_COLOR);
+					this.cmd("Step");
+					this.cmd("Delete", tmp.graphicID);
+					if (tmp.parent != tree)
+					{
+						tmp.parent.right = tmp.left;
+						tmp.left.parent = tmp.parent;
+					}
+					else
+					{
+						tree.left = tmp.left;
+						tmp.left.parent = tree;
+					}
+					this.resizeTree();
+				}
+				
+			}
+		}
+		else if (valueToDelete < tree.data)
+		{
+			if (tree.left != null)
+			{
+				this.cmd("CreateHighlightCircle", this.highlightID, BST.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
+				this.cmd("Move", this.highlightID, tree.left.x, tree.left.y);
+				this.cmd("Step");
+				this.cmd("Delete", this.highlightID);
+			}
+			this.treeDelete(tree.left, valueToDelete);
+		}
+		else
+		{
+			if (tree.right != null)
+			{
+				this.cmd("CreateHighlightCircle", this.highlightID, BST.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
+				this.cmd("Move", this.highlightID, tree.right.x, tree.right.y);
+				this.cmd("Step");
+				this.cmd("Delete", this.highlightID);
+			}
+			this.treeDelete(tree.right, valueToDelete);
+		}
+	}
+	else
+	{
+		this.cmd("SetText", 0, "Elemet "+valueToDelete+" not found, could not delete");
+		log.innerText += "Элемент не найден. Ничего не удаляем"	+ '\n'	+ '\n'								
+
+	}
 	
 }
 
@@ -1380,16 +1181,26 @@ function addclass2(){
 	if ($('#test232').hasClass( "rotateclass" )) {
 		$('#test232').removeClass("rotateclass")
 		// $('#infocode').style = "width: 0px;"
-		$('#infocode').css('width', '0');
 
 	}
 	else {
 		$('#test232').addClass("rotateclass")
 		// $('#infocode').style= "width: 420px";
-		$('#infocode').css('width', '420px');
+	}
 
+	if ($('#infocode').css('width') == '360px') {
+		$('#infocode').css('width', '0');
+	}
+	else{
+		$('#infocode').css('width', '360px');
 
 	}
+}
+
+function delhistory(){
+	let log = document.getElementById('textblock')
+	log.innerText = ""
+
 }
 
 

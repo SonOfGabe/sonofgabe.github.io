@@ -1562,18 +1562,28 @@ function addclass5(){
 }
 
 function addclass6(){
-	window.console.log($('#test236').hasClass( "rotateclass" ))
 	if ($('#test236').hasClass( "rotateclass" )) {
 		$('#test236').removeClass("rotateclass")
 		// $('#infocode').style = "width: 0px;"
-		$('#infocode').css('width', '0');
 
 	}
 	else {
 		$('#test236').addClass("rotateclass")
 		// $('#infocode').style= "width: 420px";
-		$('#infocode').css('width', '420px');
+	}
 
+	if ($('#infocode').css('width') == '360px') {
+		$('#infocode').css('width', '0');
+	}
+	else{
+		$('#infocode').css('width', '360px');
 
 	}
+}
+
+
+function delhistory(){
+	let log = document.getElementById('textblock')
+	log.innerText = ""
+
 }

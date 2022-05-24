@@ -192,6 +192,10 @@ AVL.prototype.sizeChanged = function(newWidth, newHeight)
 		
 AVL.prototype.printTree = function(unused)
 {
+	let log = document.getElementById('textblock')
+	$('#infocode').css('width', '360px');
+	$('#test232').addClass("rotateclass")
+	log.innerText = ""
 	this.commands = [];
 	
 	if (this.treeRoot != null)
@@ -214,6 +218,10 @@ AVL.prototype.printTree = function(unused)
 
 AVL.prototype.printRandTree = function(unused)
 {
+	let log = document.getElementById('textblock')
+
+	log.innerText = ""
+
 	this.deleteTree()
 	let max = 15
 	let a = []
@@ -251,6 +259,8 @@ AVL.prototype.deleteTree = function(unused)
 
 AVL.prototype.printTreeRec = function(tree) 
 {
+	let log = document.getElementById('textblock')
+
 	this.cmd("Step");
 	if (tree.left != null)
 	{
@@ -260,6 +270,7 @@ AVL.prototype.printTreeRec = function(tree)
 		this.cmd("Step");
 	}
 	var nextLabelID = this.nextIndex++;
+	log.innerText += tree.data + '\n'
 	this.cmd("CreateLabel", nextLabelID, tree.data, tree.x, tree.y);
 	this.cmd("SetForegroundColor", nextLabelID, AVL.PRINT_COLOR);
 	this.cmd("Move", nextLabelID, this.xPosOfNextLabel, this.yPosOfNextLabel);
@@ -1094,11 +1105,17 @@ AVL.prototype.insert = async function(elem, tree)
 
 AVL.prototype.insertElement1 = function(insertedValue)
 {
+	let log = document.getElementById('textblock')
+	$('#infocode').css('width', '360px');
+	$('#test232').addClass("rotateclass")
 	this.commands = [];	
 	this.cmd("SetText", 0, " Inserting "+insertedValue);
+	log.innerText += "Вставляем " + insertedValue + '\n'
 	
 	if (this.treeRoot == null)
 	{
+		log.innerText += "Корень пустой. Задаем корень = " + insertedValue + '\n\n'
+
 		var treeNodeID = this.nextIndex++;
 		var labelID  = this.nextIndex++;
 		this.cmd("CreateCircle", treeNodeID, insertedValue,  this.startingX, AVL.STARTING_Y);
@@ -1406,16 +1423,21 @@ AVL.prototype.doubleRotateLeft1 = function(tree)
 
 AVL.prototype.insert1 = function(elem, tree)
 {
+	let log = document.getElementById('textblock')
+
 	this.cmd("SetHighlight", tree.graphicID, 1);
 	this.cmd("SetHighlight", elem.graphicID, 1);
 	
 	if (elem.data < tree.data)
 	{
-		this.cmd("SetText", 0, elem.data + " < " + tree.data + ".  Looking at left subtree");				
+		this.cmd("SetText", 0, elem.data + " < " + tree.data + ".  Looking at left subtree");		
+		log.innerText += elem.data + " < " + tree.data + ". Идём в лево\n"
 	}
 	else
 	{
-		this.cmd("SetText",  0, elem.data + " >= " + tree.data + ".  Looking at right subtree");				
+		this.cmd("SetText",  0, elem.data + " >= " + tree.data + ".  Looking at right subtree");	
+		log.innerText += elem.data + " >= " + tree.data + ". Идём в право\n"
+			
 	}
 	this.cmd("Step");
 	this.cmd("SetHighlight", tree.graphicID , 0);
@@ -1425,7 +1447,9 @@ AVL.prototype.insert1 = function(elem, tree)
 	{
 		if (tree.left == null)
 		{
-			this.cmd("SetText", 0, "Found null tree, inserting element");				
+			this.cmd("SetText", 0, "Found null tree, inserting element");	
+			log.innerText += "Найден пустой лист. Вставляем элемент\n\n"
+			
 			this.cmd("SetText",elem.heightLabelID,1); 
 			
 			this.cmd("SetHighlight", elem.graphicID, 0);
@@ -1445,6 +1469,7 @@ AVL.prototype.insert1 = function(elem, tree)
 				tree.height = tree.left.height + 1
 				this.cmd("SetText",tree.heightLabelID,tree.height); 
 				this.cmd("SetText",  0, "Adjusting height after recursive call");	
+				
 		
 				this.cmd("SetForegroundColor", tree.heightLabelID, AVL.HIGHLIGHT_LABEL_COLOR);
 				this.cmd("Step");
@@ -1477,12 +1502,17 @@ AVL.prototype.insert1 = function(elem, tree)
 			if ((tree.right != null && tree.left.height > tree.right.height + 1) ||
 				(tree.right == null && tree.left.height > 1))
 			{
+				log.innerText += "Дерево не сбалансировано\n"
+
 				if (elem.data < tree.left.data)
 				{
+					log.innerText += "Выполняем правый поворот\n"
 					this.singleRotateRight1(tree);
 				}
 				else
 				{
+					log.innerText += "Выполняем двойной правый поворот\n"
+
 					this.doubleRotateRight1(tree);
 				}
 			}
@@ -1492,7 +1522,9 @@ AVL.prototype.insert1 = function(elem, tree)
 	{
 		if (tree.right == null)
 		{
-			this.cmd("SetText",  0, "Found null tree, inserting element");			
+			this.cmd("SetText",  0, "Found null tree, inserting element");	
+			log.innerText += "Найден пустой лист. Вставляем элемент\n\n"
+		
 			this.cmd("SetText", elem.heightLabelID,1); 
 			this.cmd("SetHighlight", elem.graphicID, 0);
 			tree.right=elem;
@@ -1549,12 +1581,18 @@ AVL.prototype.insert1 = function(elem, tree)
 			if ((tree.left != null && tree.right.height > tree.left.height + 1) ||
 				(tree.left == null && tree.right.height > 1))
 			{
+				log.innerText += "Дерево не сбалансировано\n"
+
 				if (elem.data >= tree.right.data)
 				{
+					log.innerText += "Выполняем левый поворот\n"
+
 					this.singleRotateLeft1(tree);
 				}
 				else
 				{
+					log.innerText += "Выполняем двойной левый поворот\n"
+
 					this.doubleRotateLeft1(tree);
 				}
 			}
@@ -2056,18 +2094,28 @@ function addclass3(){
 }
 
 function addclass4(){
-	window.console.log($('#test234').hasClass( "rotateclass" ))
 	if ($('#test234').hasClass( "rotateclass" )) {
 		$('#test234').removeClass("rotateclass")
 		// $('#infocode').style = "width: 0px;"
-		$('#infocode').css('width', '0');
 
 	}
 	else {
 		$('#test234').addClass("rotateclass")
 		// $('#infocode').style= "width: 420px";
-		$('#infocode').css('width', '420px');
+	}
 
+	if ($('#infocode').css('width') == '360px') {
+		$('#infocode').css('width', '0');
+	}
+	else{
+		$('#infocode').css('width', '360px');
 
 	}
+}
+
+
+function delhistory(){
+	let log = document.getElementById('textblock')
+	log.innerText = ""
+
 }

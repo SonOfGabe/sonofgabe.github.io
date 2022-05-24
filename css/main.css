@@ -311,6 +311,11 @@ button
     margin: 0 auto 20vh auto;
 }
 
+.content-area .content-area-inner  #about
+{
+    margin-bottom: 30vh;
+}
+
 .content-area .content-area-inner section:last-child
 {
     margin-bottom: 10vh;
@@ -1394,7 +1399,7 @@ p.infoSubSubSubHeader {
     #inforamtionBlock {
         position: absolute;
         right: -150px;
-        top: 450px;
+        top: 390px;
     
     }
     
@@ -1414,9 +1419,13 @@ p.infoSubSubSubHeader {
         top: 60px;
         background-color: #775a34; 
         width: 0;
-        height: 300px;
-        overflow: hidden;
+        height: 350px;
+        overflow: hidden auto;
         transition: width 0.2s ease-out;
+    }
+
+    .active-info-code {
+        width: 420px;
     }
     
     #openstatus {
@@ -1435,5 +1444,39 @@ p.infoSubSubSubHeader {
         right: 0;
         top: 40px;
         width: 30px;
+
+    }
+
+
+    #infocode h4 {
+        font-size: 20px;
+        color: #e9c2ab;
+        display: inline-block;
+
+
+    }
+    #infocode button {
         margin-left: 10px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        font-weight: 700;
+        color: white;
+        text-decoration: none;
+        padding: .3em ;
+        border-radius: 3px;
+        background: rgb(141, 96, 12);
+        transition: 0.2s;
+    }
+
+    #infocode button:hover { background: rgb(167, 118, 13); }
+    #infocode button:active {
+        background: rgb(202, 159, 15);
+        box-shadow: 0 3px rgb(199, 181, 21) inset;
+    }
+
+    #textblock {
+        text-align: left;
+        padding: 5px;
+        color: #e9c2ab;
+        font-size: 14px;
     }
