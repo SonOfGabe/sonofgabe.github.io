@@ -214,6 +214,11 @@ RedBlack.prototype.printRandTree = function(unused)
 
 RedBlack.prototype.deleteTree = function(unused)
 {
+	let log = document.getElementById('textblock')
+	$('#infocode').css('width', '360px');
+	$('#test236').addClass("rotateclass")
+	log.innerText = ""
+
 	this.animationManager.resetAll()
 
 	this.nextIndex = 1;
@@ -224,16 +229,22 @@ RedBlack.prototype.deleteTree = function(unused)
 	this.animationManager.skipForward();
 	this.animationManager.clearHistory();
 	window.console.log(this)
+	log.innerText = "Дерево отчищено\n\n"
 
 }
 		
 RedBlack.prototype.printTree = function(unused)
 {
+	let log = document.getElementById('textblock')
+	$('#infocode').css('width', '360px');
+	$('#test236').addClass("rotateclass")
+	log.innerText = ""
 	this.commands = [];
 	
 	if (this.treeRoot != null)
 	{
 		this.highlightID = this.nextIndex++;
+
 		var firstLabel = this.nextIndex;
 		this.cmd("CreateHighlightCircle", this.highlightID, HIGHLIGHT_COLOR, this.treeRoot.x, this.treeRoot.y);
 		this.xPosOfNextLabel = FIRST_PRINT_POS_X;
@@ -250,6 +261,8 @@ RedBlack.prototype.printTree = function(unused)
 
 RedBlack.prototype.printTreeRec = function(tree) 
 {
+	let log = document.getElementById('textblock')
+
 	this.cmd("Step");
 	if (tree.left != null && !tree.left.phantomLeaf)
 	{
@@ -259,6 +272,8 @@ RedBlack.prototype.printTreeRec = function(tree)
 		this.cmd("Step");
 	}
 	var nextLabelID = this.nextIndex++;
+	log.innerText += tree.data + '\n'
+
 	this.cmd("CreateLabel", nextLabelID, tree.data, tree.x, tree.y);
 	this.cmd("SetForegroundColor", nextLabelID, PRINT_COLOR);
 	this.cmd("Move", nextLabelID, this.xPosOfNextLabel, this.yPosOfNextLabel);
@@ -284,6 +299,10 @@ RedBlack.prototype.printTreeRec = function(tree)
 
 RedBlack.prototype.findElement = function(findValue)
 {
+	let log = document.getElementById('textblock')
+	$('#infocode').css('width', '360px');
+	$('#test236').addClass("rotateclass")
+	log.innerText = ""
 	this.commands = [];
 	
 	this.highlightID = this.nextIndex++;
@@ -297,6 +316,8 @@ RedBlack.prototype.findElement = function(findValue)
 
 RedBlack.prototype.doFind = function(tree, value)
 {
+	let log = document.getElementById('textblock')
+
 	this.cmd("SetText", 0, "Searchiing for "+value);
 	if (tree != null && !tree.phantomLeaf)
 	{
@@ -304,6 +325,8 @@ RedBlack.prototype.doFind = function(tree, value)
 		if (tree.data == value)
 		{
 			this.cmd("SetText", 0, "Searching for "+value+" : " + value + " = " + value + " (Element found!)");
+			log.innerText += "Искомое значение " +  value +  " == " + tree.data + '\n Элемент найден'
+
 			this.cmd("Step");
 			this.cmd("SetText", 0, "Found:"+value);
 			this.cmd("SetHighlight", tree.graphicID, 0);
@@ -313,6 +336,8 @@ RedBlack.prototype.doFind = function(tree, value)
 			if (tree.data > value)
 			{
 				this.cmd("SetText", 0, "Searching for "+value+" : " + value + " < " + tree.data + " (look to left subtree)");
+				log.innerText += value + " < " + tree.data + "\n Идем в лево" + '\n\n'
+
 				this.cmd("Step");
 				this.cmd("SetHighlight", tree.graphicID, 0);
 				if (tree.left!= null)
@@ -326,7 +351,9 @@ RedBlack.prototype.doFind = function(tree, value)
 			}
 			else
 			{
-				this.cmd("SetText", 0, " Searching for "+value+" : " + value + " > " + tree.data + " (look to right subtree)");					
+				this.cmd("SetText", 0, " Searching for "+value+" : " + value + " > " + tree.data + " (look to right subtree)");		
+				log.innerText += value + " > " + tree.data + "\n Идем в право" + '\n\n'
+			
 				this.cmd("Step");
 				this.cmd("SetHighlight", tree.graphicID, 0);
 				if (tree.right!= null)
@@ -346,7 +373,9 @@ RedBlack.prototype.doFind = function(tree, value)
 	{
 		this.cmd("SetText", 0, " Searching for "+value+" : " + "< Empty Tree > (Element not found)");				
 		this.cmd("Step");					
-		this.cmd("SetText", 0, " Searching for "+value+" : " + " (Element not found)");					
+		this.cmd("SetText", 0, " Searching for "+value+" : " + " (Element not found)");		
+		log.innerText += "Элемент не найден"
+			
 	}
 }
 
@@ -429,12 +458,19 @@ RedBlack.prototype.attachNullLeaves = function(node)
 
 RedBlack.prototype.insertElement = function(insertedValue)
 {
+	let log = document.getElementById('textblock')
+	$('#infocode').css('width', '360px');
+	$('#test236').addClass("rotateclass")
+	log.innerText += "Вставляем " + insertedValue + '\n'
+
 	this.commands = new Array();	
 	this.cmd("SetText", 0, " Inserting "+insertedValue);
 	this.highlightID = this.nextIndex++;
 	var treeNodeID;
 	if (this.treeRoot == null)
 	{
+		log.innerText += "Корень пустой. Задаем корень = " + insertedValue + '\n\n'
+
 		treeNodeID = this.nextIndex++;
 		this.cmd("CreateCircle", treeNodeID, insertedValue,  this.startingX, startingY);
 		this.cmd("SetForegroundColor", treeNodeID, FOREGROUND_BLACK);
@@ -593,16 +629,22 @@ RedBlack.prototype.resetHeight = function(tree)
 
 RedBlack.prototype.insert = function(elem, tree)
 {
+	let log = document.getElementById('textblock')
+
 	this.cmd("SetHighlight", tree.graphicID, 1);
 	this.cmd("SetHighlight", elem.graphicID, 1);
 	
 	if (elem.data < tree.data)
 	{
-		this.cmd("SetText", 0, elem.data + " < " + tree.data + ".  Looking at left subtree");				
+		this.cmd("SetText", 0, elem.data + " < " + tree.data + ".  Looking at left subtree");
+		log.innerText += elem.data + " < " + tree.data + ". Идём в лево\n"
+				
 	}
 	else
 	{
-		this.cmd("SetText",  0, elem.data + " >= " + tree.data + ".  Looking at right subtree");				
+		this.cmd("SetText",  0, elem.data + " >= " + tree.data + ".  Looking at right subtree");
+		log.innerText += elem.data + " >= " + tree.data + ". Идём в право\n"
+				
 	}
 	this.cmd("Step");
 	this.cmd("SetHighlight", tree.graphicID , 0);
@@ -612,7 +654,9 @@ RedBlack.prototype.insert = function(elem, tree)
 	{
 		if (tree.left == null || tree.left.phantomLeaf)
 		{
-			this.cmd("SetText", 0, "Found null tree (or phantom leaf), inserting element");				
+			this.cmd("SetText", 0, "Found null tree (or phantom leaf), inserting element");	
+			log.innerText += "Найден пустой лист(или фантомный лист). Вставляем элемент\n\n"
+			
 			if (tree.left != null)
 			{
 				this.cmd("Delete", tree.left.graphicID);
@@ -648,6 +692,8 @@ RedBlack.prototype.insert = function(elem, tree)
 		if (tree.right == null  || tree.right.phantomLeaf)
 		{
 			this.cmd("SetText",  0, "Found null tree (or phantom leaf), inserting element");
+			log.innerText += "Найден пустой лист(или фантомный лист). Вставляем элемент\n\n"
+
 			if (tree.right != null)
 			{
 				this.cmd("Delete", tree.right.graphicID);
@@ -685,6 +731,8 @@ RedBlack.prototype.insert = function(elem, tree)
 
 RedBlack.prototype.fixDoubleRed = function(tree)
 {
+	let log = document.getElementById('textblock')
+
 	if (tree.parent != null)
 	{
 		if (tree.parent.blackLevel > 0)
@@ -694,6 +742,7 @@ RedBlack.prototype.fixDoubleRed = function(tree)
 		if (tree.parent.parent == null)
 		{
 			this.cmd("SetText", 0, "Tree root is red, color it black.");
+			log.innerText += "Корень дерева красный, красим его в черный\n\n"
 			this.cmd("Step");
 			tree.parent.blackLevel = 1;
 			this.cmd("SetForegroundColor", tree.parent.graphicID, FOREGROUND_BLACK);
@@ -704,6 +753,8 @@ RedBlack.prototype.fixDoubleRed = function(tree)
 		if (this.blackLevel(uncle) == 0)
 		{
 			this.cmd("SetText", 0, "Node and parent are both red.  Uncle of node is red -- push blackness down from grandparent");
+			log.innerText += "Узел и родительский элемент красные. Дядя узла красный -- делаем прорадителя узла красным, дядю и родителя черными\n\n"
+
 			this.cmd("Step");
 			
 			this.cmd("SetForegroundColor", uncle.graphicID, FOREGROUND_BLACK);
@@ -725,6 +776,8 @@ RedBlack.prototype.fixDoubleRed = function(tree)
 			if (tree.isLeftChild() &&  !tree.parent.isLeftChild())
 			{
 				this.cmd("SetText", 0, "Node and parent are both red.  Node is left child, parent is right child -- rotate");
+				log.innerText += "Узел и родительский элемент красные. Узел - левый ребёнок, родитель правый ребёнок -- Делаем правый поворот\n\n"
+
 				this.cmd("Step");
 				
 				this.singleRotateRight(tree.parent);
@@ -734,6 +787,8 @@ RedBlack.prototype.fixDoubleRed = function(tree)
 			else if (!tree.isLeftChild() && tree.parent.isLeftChild())
 			{
 				this.cmd("SetText", 0, "Node and parent are both red.  Node is right child, parent is left child -- rotate");
+				log.innerText += "Узел и родительский элемент красные. Узел - правый ребёнок, родитель левый ребёнок -- Делаем левый поворот\n\n"
+
 				this.cmd("Step");
 				
 				this.singleRotateLeft(tree.parent);
@@ -743,6 +798,8 @@ RedBlack.prototype.fixDoubleRed = function(tree)
 			if (tree.isLeftChild())
 			{
 				this.cmd("SetText", 0, "Node and parent are both red.  Node is left child, parent is left child\nCan fix extra redness with a single rotation");
+				log.innerText += "Узел и родительский элемент красные. Узел - левый ребёнок, родитель правый ребёнок\nМожно исправить излишнюю красноту одним правым поворотом\n\n"
+
 				this.cmd("Step");
 				
 				this.singleRotateRight(tree.parent.parent);
@@ -759,6 +816,8 @@ RedBlack.prototype.fixDoubleRed = function(tree)
 			else
 			{
 				this.cmd("SetText", 0, "Node and parent are both red.  Node is right child, parent is right child\nCan fix extra redness with a single rotation");
+				log.innerText += "Узел и родительский элемент красные. Узел - правый ребёнок, родитель левый ребёнок\nМожно исправить излишнюю красноту одним левым поворотом\n\n"
+
 				this.cmd("Step");
 				
 				this.singleRotateLeft(tree.parent.parent);
@@ -779,6 +838,8 @@ RedBlack.prototype.fixDoubleRed = function(tree)
 		if (tree.blackLevel == 0)
 		{
 			this.cmd("SetText", 0, "Root of the tree is red.  Color it black");
+			log.innerText += "Корень дерева красный. Красим в черный\n\n"
+
 			this.cmd("Step");
 			
 			tree.blackLevel = 1;
@@ -791,8 +852,14 @@ RedBlack.prototype.fixDoubleRed = function(tree)
 
 RedBlack.prototype.deleteElement = function(deletedValue)
 {
+	let log = document.getElementById('textblock')
+	$('#infocode').css('width', '360px');
+	$('#test236').addClass("rotateclass")
+	log.innerText = ""
 	this.commands = new Array();
 	this.cmd("SetText", 0, "Deleting "+deletedValue);
+	log.innerText = "Удаляем " + deletedValue + '\n\n'
+
 	this.cmd("Step");
 	this.cmd("SetText", 0, " ");
 	this.highlightID = this.nextIndex++;
@@ -855,7 +922,9 @@ RedBlack.prototype.fixRightNull = function(tree)
 
 
 RedBlack.prototype.fixExtraBlackChild = function(parNode, isLeftChild)
-{
+{	
+	let log = document.getElementById('textblock')
+
 	var sibling;
 	var doubleBlackNode;
 	if (isLeftChild)
@@ -871,6 +940,7 @@ RedBlack.prototype.fixExtraBlackChild = function(parNode, isLeftChild)
 	if (this.blackLevel(sibling) > 0 && this.blackLevel(sibling.left) > 0 && this.blackLevel(sibling.right) > 0)
 	{
 		this.cmd("SetText", 0, "Double black node has black sibling and 2 black nephews.  Push up black level");
+		log.innerText += "У двойного черного узла есть черный брат или сестра и 2 черных племянника.  Повышение уровня черного цвета\n\n"
 		this.cmd("Step");
 		sibling.blackLevel = 0;
 		this.fixNodeColor(sibling);
@@ -890,6 +960,8 @@ RedBlack.prototype.fixExtraBlackChild = function(parNode, isLeftChild)
 			parNode.blackLevel = 2;
 			this.fixNodeColor(parNode);
 			this.cmd("SetText", 0, "Pushing up black level created another double black node.  Repeating ...");
+			log.innerText += "Повышение уровня черного создало еще один двойной черный узел.  Повторяем ...\n\n"
+
 			this.cmd("Step");
 			this.fixExtraBlack(parNode);
 		}				
@@ -897,6 +969,8 @@ RedBlack.prototype.fixExtraBlackChild = function(parNode, isLeftChild)
 	else if (this.blackLevel(sibling) == 0)
 	{
 		this.cmd("SetText", 0, "Double black node has red sibling.  Rotate tree to make sibling black ...");
+		log.innerText += "У двойного черного узла есть красный брат.  Повернем дерево, чтобы сделать брата черным\n\n"
+
 		this.cmd("Step");
 		if (isLeftChild)
 		{
@@ -924,6 +998,8 @@ RedBlack.prototype.fixExtraBlackChild = function(parNode, isLeftChild)
 	else if (isLeftChild && this.blackLevel(sibling.right) > 0)
 	{
 		this.cmd("SetText", 0, "Double black node has black sibling, but double black node is a left child, \nand the right nephew is black.  Rotate tree to make opposite nephew red ...");
+		log.innerText += "Двойной черный узел имеет черных братьев и сестер, но двойной черный узел является левым ребенком, \n а правый племянник - черным.  Повернем дерево, чтобы противоположный племянник стал красным...\n\n"
+
 		this.cmd("Step");
 		
 		var newSib = this.singleRotateRight(sibling);
@@ -937,6 +1013,8 @@ RedBlack.prototype.fixExtraBlackChild = function(parNode, isLeftChild)
 	else if (!isLeftChild && this.blackLevel(sibling.left) > 0)
 	{
 		this.cmd("SetText", 0, "Double black node has black sibling, but double black node is a right child, \nand the left nephew is black.  Rotate tree to make opposite nephew red ...");
+		log.innerText += "Двойной черный узел имеет черных братьев и сестер, но двойной черный узел является правым ребенком, \n а левый племянник - черным.  Повернем дерево так, чтобы противоположный племянник стал красным...\n\n"
+
 		this.cmd("Step");
 		newSib = this.singleRotateLeft(sibling);
 		newSib.blackLevel = 1;
@@ -949,6 +1027,8 @@ RedBlack.prototype.fixExtraBlackChild = function(parNode, isLeftChild)
 	else if (isLeftChild)
 	{
 		this.cmd("SetText", 0, "Double black node has black sibling, is a left child, and its right nephew is red.\nOne rotation can fix double-blackness.");
+		log.innerText += "Двойной черный узел имеет черного брата, левого ребенка, а его правый племянник - красный.\nЛевым поворотом исправим двойную черноту.\n\n"
+
 		this.cmd("Step");
 		
 		var oldParBlackLevel  = parNode.blackLevel;
@@ -971,6 +1051,8 @@ RedBlack.prototype.fixExtraBlackChild = function(parNode, isLeftChild)
 	else
 	{
 		this.cmd("SetText", 0, "Double black node has black sibling, is a right child, and its left nephew is red.\nOne rotation can fix double-blackness.");
+		log.innerText += "Двойной черный узел имеет черного брата, правого ребенка, а его левый племянник - красный.\nПравым поворотом исправим двойную черноту.\n\n"
+
 		this.cmd("Step");
 		
 		oldParBlackLevel  = parNode.blackLevel;
@@ -1025,6 +1107,8 @@ RedBlack.prototype.fixExtraBlack = function(tree)
 
 RedBlack.prototype.treeDelete = function(tree, valueToDelete)
 {
+	let log = document.getElementById('textblock')
+
 	var leftchild = false;
 	if (tree != null && !tree.phantomLeaf)
 	{
@@ -1035,15 +1119,21 @@ RedBlack.prototype.treeDelete = function(tree, valueToDelete)
 		this.cmd("SetHighlight", tree.graphicID, 1);
 		if (valueToDelete < tree.data)
 		{	
-			this.cmd("SetText", 0, valueToDelete + " < " + tree.data + ".  Looking at left subtree");				
+			this.cmd("SetText", 0, valueToDelete + " < " + tree.data + ".  Looking at left subtree");	
+			log.innerText += valueToDelete + " < " + tree.data + ".\n  Идем в лево\n\n"		
+			
 		}
 		else if (valueToDelete > tree.data)
 		{
-			this.cmd("SetText", 0, valueToDelete + " > " + tree.data + ".  Looking at right subtree");				
+			this.cmd("SetText", 0, valueToDelete + " > " + tree.data + ".  Looking at right subtree");
+			log.innerText += valueToDelete + " > " + tree.data + ".\n  Идем в право\n\n"		
+				
 		}
 		else
 		{
-			this.cmd("SetText", 0, valueToDelete + " == " + tree.data + ".  Found node to delete");									
+			this.cmd("SetText", 0, valueToDelete + " == " + tree.data + ".  Found node to delete");	
+			log.innerText += valueToDelete + " == " + tree.data + ".\n  Найден элемент для удаления\n\n"		
+								
 		}
 		this.cmd("Step");
 		this.cmd("SetHighlight", tree.graphicID, 0);
@@ -1054,6 +1144,8 @@ RedBlack.prototype.treeDelete = function(tree, valueToDelete)
 			if (((tree.left == null) || tree.left.phantomLeaf)  && ((tree.right == null) || tree.right.phantomLeaf))
 			{
 				this.cmd("SetText",  0, "Node to delete is a leaf.  Delete it.");
+				log.innerText += "Элемент для удаления лист. Удаляем его\n\n"		
+
 				this.cmd("Delete", tree.graphicID);
 				
 				if (tree.left != null)
@@ -1104,7 +1196,9 @@ RedBlack.prototype.treeDelete = function(tree, valueToDelete)
 			}
 			else if (tree.left == null || tree.left.phantomLeaf)
 			{
-				this.cmd("SetText", 0, "Node to delete has no left child.  \nSet parent of deleted node to right child of deleted node.");									
+				this.cmd("SetText", 0, "Node to delete has no left child.  \nSet parent of deleted node to right child of deleted node.");	
+				log.innerText += "Узел для удаления не имеет левого дочернего элемента.\n Установим родительский элемент удаленного узла на правый дочерний элемент удаленного узла."	+ '\n'+ '\n'								
+								
 				if (tree.left != null)
 				{
 					this.cmd("Delete", tree.left.graphicID);
@@ -1123,6 +1217,8 @@ RedBlack.prototype.treeDelete = function(tree, valueToDelete)
 						if (needFix)
 						{
 							this.cmd("SetText", 0, "Back node removed.  Increasing child's blackness level");
+							log.innerText += "Черный узел удален. Увеличиваем уровень черноты"	+ '\n'+ '\n'								
+
 							tree.parent.left.blackLevel++;
 							this.fixNodeColor(tree.parent.left);
 							this.fixExtraBlack(tree.parent.left);
@@ -1135,6 +1231,8 @@ RedBlack.prototype.treeDelete = function(tree, valueToDelete)
 						{
 							tree.parent.right.blackLevel++;
 							this.cmd("SetText", 0, "Back node removed.  Increasing child's blackness level");
+							log.innerText += "Черный узел удален. Увеличиваем уровень черноты"	+ '\n'+ '\n'								
+
 							this.fixNodeColor(tree.parent.right);
 							this.fixExtraBlack(tree.parent.right);
 						}
@@ -1159,6 +1257,8 @@ RedBlack.prototype.treeDelete = function(tree, valueToDelete)
 			else if (tree.right == null || tree.right.phantomLeaf)
 			{
 				this.cmd("SetText",  0,"Node to delete has no right child.  \nSet parent of deleted node to left child of deleted node.");
+				log.innerText += "Узел для удаления не имеет правого дочернего элемента.\n'\n' Установим родительский элемент удаленного узла на левый дочерний элемент удаленного узла."	+ '\n'+ '\n'								
+
 				if (tree.right != null)
 				{
 					this.cmd("Delete", tree.right.graphicID);
@@ -1182,7 +1282,9 @@ RedBlack.prototype.treeDelete = function(tree, valueToDelete)
 						}
 						else
 						{
-							this.cmd("SetText", 0, "Deleted node was red.  No tree rotations required.");									
+							this.cmd("SetText", 0, "Deleted node was red.  No tree rotations required.");
+							log.innerText += "Удаленный узел был красным.  Повороты деревьев не требуются."	+ '\n'+ '\n'								
+									
 							this.resizeTree();
 								
 						}
@@ -1199,7 +1301,9 @@ RedBlack.prototype.treeDelete = function(tree, valueToDelete)
 						}
 						else
 						{
-							this.cmd("SetText", 0, "Deleted node was red.  No tree rotations required.");									
+							this.cmd("SetText", 0, "Deleted node was red.  No tree rotations required.");
+							log.innerText += "Удаленный узел был красным.  Повороты деревьев не требуются."	+ '\n'+ '\n'								
+									
 							this.resizeTree();								
 						}
 					}
@@ -1219,7 +1323,9 @@ RedBlack.prototype.treeDelete = function(tree, valueToDelete)
 			}
 			else // tree.left != null && tree.right != null
 			{
-				this.cmd("SetText", 0, "Node to delete has two childern.  \nFind largest node in left subtree.");									
+				this.cmd("SetText", 0, "Node to delete has two childern.  \nFind largest node in left subtree.");	
+				log.innerText += "Узел для удаления имеет два дочерних элемента.\n\n Ищем наибольший узел в левом поддереве."	+ '\n'	+ '\n'								
+								
 				
 				this.highlightID = this.nextIndex;
 				this.nextIndex += 1;
@@ -1246,14 +1352,18 @@ RedBlack.prototype.treeDelete = function(tree, valueToDelete)
 				this.cmd("SetForegroundColor", labelID, BLUE);
 				tree.data = tmp.data;
 				this.cmd("Move", labelID, tree.x, tree.y);
-				this.cmd("SetText", 0, "Copy largest value of left subtree into node to delete.");									
+				this.cmd("SetText", 0, "Copy largest value of left subtree into node to delete.");	
+				log.innerText += "Копируем наибольшее значение с левого поддерева в узел для удаления."	+ '\n'	+ '\n'								
+								
 				
 				this.cmd("Step");
 				this.cmd("SetHighlight", tree.graphicID, 0);
 				this.cmd("Delete", labelID);
 				this.cmd("SetText", tree.graphicID, tree.data);
 				this.cmd("Delete", this.highlightID);							
-				this.cmd("SetText", 0, "Remove node whose value we copied.");									
+				this.cmd("SetText", 0, "Remove node whose value we copied.");	
+				log.innerText += "Удаляем узел, значение которого мы скопировали"	+ '\n'	+ '\n'								
+								
 				
 				needFix = tmp.blackLevel > 0;
 				
@@ -1271,7 +1381,9 @@ RedBlack.prototype.treeDelete = function(tree, valueToDelete)
 						}
 						else
 						{
-							this.cmd("SetText", 0, "Deleted node was red.  No tree rotations required.");									
+							this.cmd("SetText", 0, "Deleted node was red.  No tree rotations required.");
+							log.innerText += "Удаленный узел был красным.  Повороты деревьев не требуются."	+ '\n'+ '\n'								
+									
 							this.cmd("Step");									
 						}
 					}
@@ -1285,7 +1397,9 @@ RedBlack.prototype.treeDelete = function(tree, valueToDelete)
 						}
 						else
 						{
-							this.cmd("SetText", 0, "Deleted node was red.  No tree rotations required.");									
+							this.cmd("SetText", 0, "Deleted node was red.  No tree rotations required.");
+							log.innerText += "Удаленный узел был красным.  Повороты деревьев не требуются."	+ '\n'+ '\n'								
+									
 							this.cmd("Step");									
 						}
 					}
@@ -1306,6 +1420,8 @@ RedBlack.prototype.treeDelete = function(tree, valueToDelete)
 						if (needFix)
 						{
 							this.cmd("SetText", 0, "Coloring child of deleted node black");
+							log.innerText += "Окрасим дочерний узлел удаленного узла в черный цвет."	+ '\n'+ '\n'								
+
 							this.cmd("Step");
 							tmp.left.blackLevel++;
 							if (tmp.left.phantomLeaf)
@@ -1322,7 +1438,9 @@ RedBlack.prototype.treeDelete = function(tree, valueToDelete)
 						}
 						else
 						{
-							this.cmd("SetText", 0, "Deleted node was red.  No tree rotations required.");									
+							this.cmd("SetText", 0, "Deleted node was red.  No tree rotations required.");
+							log.innerText += "Удаленный узел был красным.  Повороты деревьев не требуются."	+ '\n'+ '\n'								
+									
 							this.cmd("Step");									
 						}
 					}
@@ -1334,6 +1452,8 @@ RedBlack.prototype.treeDelete = function(tree, valueToDelete)
 						if (needFix)
 						{
 							this.cmd("SetText", 0, "Coloring child of deleted node black");
+							log.innerText += "Окрасим дочерний узлел удаленного узла в черный цвет."	+ '\n'+ '\n'								
+
 							this.cmd("Step");
 							tmp.left.blackLevel++;
 							if (tmp.left.phantomLeaf)
@@ -1351,7 +1471,9 @@ RedBlack.prototype.treeDelete = function(tree, valueToDelete)
 						}
 						else
 						{
-							this.cmd("SetText", 0, "Deleted node was red.  No tree rotations required.");									
+							this.cmd("SetText", 0, "Deleted node was red.  No tree rotations required.");
+							log.innerText += "Удаленный узел был красным.  Повороты деревьев не требуются."	+ '\n'+ '\n'								
+									
 							this.cmd("Step");									
 						}
 					}
@@ -1386,6 +1508,8 @@ RedBlack.prototype.treeDelete = function(tree, valueToDelete)
 	else
 	{
 		this.cmd("SetText", 0, "Elemet "+valueToDelete+" not found, could not delete");
+		log.innerText += "Элемент для удаления не найден"	+ '\n'	+ '\n'								
+
 	}
 	
 }

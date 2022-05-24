@@ -194,7 +194,7 @@ AVL.prototype.printTree = function(unused)
 {
 	let log = document.getElementById('textblock')
 	$('#infocode').css('width', '360px');
-	$('#test232').addClass("rotateclass")
+	$('#test234').addClass("rotateclass")
 	log.innerText = ""
 	this.commands = [];
 	
@@ -244,6 +244,10 @@ AVL.prototype.printRandTree = function(unused)
 
 AVL.prototype.deleteTree = function(unused)
 {
+	let log = document.getElementById('textblock')
+	$('#infocode').css('width', '360px');
+	$('#test234').addClass("rotateclass")
+	log.innerText = ""
 	this.animationManager.resetAll()
 
 	this.nextIndex = 1;
@@ -254,6 +258,7 @@ AVL.prototype.deleteTree = function(unused)
 	this.animationManager.skipForward();
 	this.animationManager.clearHistory();
 	window.console.log(this)
+	log.innerText = "Дерево отчищено\n\n"
 
 }
 
@@ -296,8 +301,13 @@ AVL.prototype.printTreeRec = function(tree)
 
 AVL.prototype.findElement = function(findValue)
 {
+	let log = document.getElementById('textblock')
+	$('#infocode').css('width', '360px');
+	$('#test234').addClass("rotateclass")
+	log.innerText = ""
+
 	this.commands = [];
-	
+	log.innerText = "Ищем " + findValue + '\n\n'
 	this.highlightID = this.nextIndex++;
 	
 	this.doFind(this.treeRoot, findValue);
@@ -309,6 +319,8 @@ AVL.prototype.findElement = function(findValue)
 
 AVL.prototype.doFind = function(tree, value)
 {
+	let log = document.getElementById('textblock')
+
 	this.cmd("SetText", 0, "Searchiing for "+value);
 	if (tree != null)
 	{
@@ -316,6 +328,7 @@ AVL.prototype.doFind = function(tree, value)
 		if (tree.data == value)
 		{
 			this.cmd("SetText", 0, "Searching for "+value+" : " + value + " = " + value + " (Element found!)");
+			log.innerText += "Искомое значение " +  value +  " == " + tree.data + '\n Элемент найден'
 			this.cmd("Step");
 			this.cmd("SetText", 0, "Found:"+value);
 			this.cmd("SetHighlight", tree.graphicID, 0);
@@ -325,6 +338,8 @@ AVL.prototype.doFind = function(tree, value)
 			if (tree.data > value)
 			{
 				this.cmd("SetText", 0, "Searching for "+value+" : " + value + " < " + tree.data + " (look to left subtree)");
+				log.innerText += value + " < " + tree.data + "\n Идем в лево" + '\n\n'
+
 				this.cmd("Step");
 				this.cmd("SetHighlight", tree.graphicID, 0);
 				if (tree.left!= null)
@@ -338,7 +353,9 @@ AVL.prototype.doFind = function(tree, value)
 			}
 			else
 			{
-				this.cmd("SetText", 0, " Searching for "+value+" : " + value + " > " + tree.data + " (look to right subtree)");					
+				this.cmd("SetText", 0, " Searching for "+value+" : " + value + " > " + tree.data + " (look to right subtree)");
+				log.innerText += value + " > " + tree.data + "\n Идем в право" + '\n\n'
+					
 				this.cmd("Step");
 				this.cmd("SetHighlight", tree.graphicID, 0);
 				if (tree.right!= null)
@@ -358,7 +375,9 @@ AVL.prototype.doFind = function(tree, value)
 	{
 		this.cmd("SetText", 0, " Searching for "+value+" : " + "< Empty Tree > (Element not found)");				
 		this.cmd("Step");					
-		this.cmd("SetText", 0, " Searching for "+value+" : " + " (Element not found)");					
+		this.cmd("SetText", 0, " Searching for "+value+" : " + " (Element not found)");	
+		log.innerText += "Элемент не найден"
+
 	}
 }
 
@@ -1107,7 +1126,7 @@ AVL.prototype.insertElement1 = function(insertedValue)
 {
 	let log = document.getElementById('textblock')
 	$('#infocode').css('width', '360px');
-	$('#test232').addClass("rotateclass")
+	$('#test234').addClass("rotateclass")
 	this.commands = [];	
 	this.cmd("SetText", 0, " Inserting "+insertedValue);
 	log.innerText += "Вставляем " + insertedValue + '\n'
@@ -1606,8 +1625,14 @@ AVL.prototype.insert1 = function(elem, tree)
 /*******************************************************************************/
 AVL.prototype.deleteElement = function(deletedValue)
 {
+	let log = document.getElementById('textblock')
+	$('#infocode').css('width', '360px');
+	$('#test234').addClass("rotateclass")
+	log.innerText = ""
+
 	this.commands = [];
 	this.cmd("SetText", 0, "Deleting "+deletedValue);
+	log.innerText = "Удаляем " + deletedValue + '\n\n'
 	this.cmd("Step");
 	this.cmd("SetText", 0, " ");
 	this.highlightID = this.nextIndex++;
@@ -1618,6 +1643,8 @@ AVL.prototype.deleteElement = function(deletedValue)
 
 AVL.prototype.treeDelete = function(tree, valueToDelete)
 {
+	let log = document.getElementById('textblock')
+
 	var leftchild = false;
 	if (tree != null)
 	{
@@ -1628,15 +1655,19 @@ AVL.prototype.treeDelete = function(tree, valueToDelete)
 		this.cmd("SetHighlight", tree.graphicID, 1);
 		if (valueToDelete < tree.data)
 		{	
-			this.cmd("SetText", 0, valueToDelete + " < " + tree.data + ".  Looking at left subtree");				
+			this.cmd("SetText", 0, valueToDelete + " < " + tree.data + ".  Looking at left subtree");		
+			log.innerText += valueToDelete + " < " + tree.data + ".\n  Идем в лево\n\n"		
 		}
 		else if (valueToDelete > tree.data)
 		{
-			this.cmd("SetText", 0, valueToDelete + " > " + tree.data + ".  Looking at right subtree");				
+			this.cmd("SetText", 0, valueToDelete + " > " + tree.data + ".  Looking at right subtree");		
+			log.innerText += valueToDelete + " > " + tree.data + ".\n  Идем в право\n\n"		
+		
 		}
 		else
 		{
-			this.cmd("SetText", 0, valueToDelete + " == " + tree.data + ".  Found node to delete");									
+			this.cmd("SetText", 0, valueToDelete + " == " + tree.data + ".  Found node to delete");		
+			log.innerText += valueToDelete + " == " + tree.data + ".\n  Найден элемент для удаления\n\n"		
 		}
 		this.cmd("Step");
 		this.cmd("SetHighlight", tree.graphicID, 0);
@@ -1645,7 +1676,9 @@ AVL.prototype.treeDelete = function(tree, valueToDelete)
 		{
 			if (tree.left == null && tree.right == null)
 			{
-				this.cmd("SetText",  0, "Node to delete is a leaf.  Delete it.");									
+				this.cmd("SetText",  0, "Node to delete is a leaf.  Delete it.");	
+				log.innerText += "Элемент для удаления лист. Удаляем его\n\n"		
+								
 				this.cmd("Delete", tree.graphicID);
 				this.cmd("Delete", tree.heightLabelID);
 				if (leftchild && tree.parent != null)
@@ -1666,7 +1699,9 @@ AVL.prototype.treeDelete = function(tree, valueToDelete)
 			}
 			else if (tree.left == null)
 			{
-				this.cmd("SetText", 0, "Node to delete has no left child.  \nSet parent of deleted node to right child of deleted node.");									
+				this.cmd("SetText", 0, "Node to delete has no left child.  \nSet parent of deleted node to right child of deleted node.");
+				log.innerText += "Узел для удаления не имеет левого дочернего элемента.\n Установим родительский элемент удаленного узла на правый дочерний элемент удаленного узла."	+ '\n'+ '\n'								
+									
 				if (tree.parent != null)
 				{
 					this.cmd("Disconnect", tree.parent.graphicID, tree.graphicID);
@@ -1695,7 +1730,9 @@ AVL.prototype.treeDelete = function(tree, valueToDelete)
 			}
 			else if (tree.right == null)
 			{
-				this.cmd("SetText",  0,"Node to delete has no right child.  \nSet parent of deleted node to left child of deleted node.");									
+				this.cmd("SetText",  0,"Node to delete has no right child.  \nSet parent of deleted node to left child of deleted node.");	
+				log.innerText += "Узел для удаления не имеет правого дочернего элемента.\n'\n' Установим родительский элемент удаленного узла на левый дочерний элемент удаленного узла."	+ '\n'+ '\n'								
+								
 				if (tree.parent != null)
 				{
 					this.cmd("Disconnect", tree.parent.graphicID, tree.graphicID);
@@ -1724,7 +1761,9 @@ AVL.prototype.treeDelete = function(tree, valueToDelete)
 			}
 			else // tree.left != null && tree.right != null
 			{
-				this.cmd("SetText", 0, "Node to delete has two childern.  \nFind largest node in left subtree.");									
+				this.cmd("SetText", 0, "Node to delete has two childern.  \nFind largest node in left subtree.");
+				log.innerText += "Узел для удаления имеет два дочерних элемента.\n\n Ищем наибольший узел в левом поддереве."	+ '\n'	+ '\n'								
+									
 				
 				this.highlightID = this.nextIndex;
 				this.nextIndex += 1;
@@ -1746,7 +1785,9 @@ AVL.prototype.treeDelete = function(tree, valueToDelete)
 				this.cmd("SetForegroundColor", labelID, AVL.HEIGHT_LABEL_COLOR);
 				tree.data = tmp.data;
 				this.cmd("Move", labelID, tree.x, tree.y);
-				this.cmd("SetText", 0, "Copy largest value of left subtree into node to delete.");									
+				this.cmd("SetText", 0, "Copy largest value of left subtree into node to delete.");		
+				log.innerText += "Копируем наибольшее значение с левого поддерева в узел для удаления."	+ '\n'	+ '\n'								
+							
 				
 				this.cmd("Step");
 				this.cmd("SetHighlight", tree.graphicID, 0);
@@ -1754,6 +1795,8 @@ AVL.prototype.treeDelete = function(tree, valueToDelete)
 				this.cmd("SetText", tree.graphicID, tree.data);
 				this.cmd("Delete", this.highlightID);							
 				this.cmd("SetText", 0, "Remove node whose value we copied.");									
+				log.innerText += "Удаляем узел, значение которого мы скопировали"	+ '\n'	+ '\n'								
+
 				
 				if (tmp.left == null)
 				{
@@ -1883,12 +1926,16 @@ AVL.prototype.treeDelete = function(tree, valueToDelete)
 			}
 			if (this.getHeight(tree.right)- this.getHeight(tree.left) > 1)
 			{
+				log.innerText += "Дерево не сбалансировано\n"
+
 				if (this.getHeight(tree.right.left) > this.getHeight(tree.right.right))
 				{
+					log.innerText += "Выполняем двойной левый поворот\n"
 					this.doubleRotateLeft(tree);
 				}
 				else
 				{
+					log.innerText += "Выполняем левый поворот\n"
 					this.singleRotateLeft(tree);
 				}					
 			}
@@ -1924,12 +1971,18 @@ AVL.prototype.treeDelete = function(tree, valueToDelete)
 			
 			if (this.getHeight(tree.left)- this.getHeight(tree.right) > 1)
 			{
+				log.innerText += "Дерево не сбалансировано\n"
+
 				if (this.getHeight(tree.left.right) > this.getHeight(tree.left.left))
 				{
+					log.innerText += "Выполняем двойной правый поворот\n"
+
 					this.doubleRotateRight(tree);
 				}
 				else
 				{
+					log.innerText += "Выполняем правый поворот\n"
+
 					this.singleRotateRight(tree);
 				}					
 			}
@@ -1949,6 +2002,8 @@ AVL.prototype.treeDelete = function(tree, valueToDelete)
 	else
 	{
 		this.cmd("SetText", 0, "Elemet "+valueToDelete+" not found, could not delete");
+		log.innerText += "Элемент для удаления не найден"	+ '\n'	+ '\n'								
+
 	}
 	
 }
