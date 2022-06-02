@@ -260,7 +260,8 @@ button
             transition: opacity 1s ease;
     background-color:   rgba(0,0,0,1);
     background: url(../img/background.jpg);
-    filter: blur(2px);
+    /* filter: blur(2px); */
+    filter: brightness(200%);
     background-repeat: no-repeat;
     background-size: cover;
 }
